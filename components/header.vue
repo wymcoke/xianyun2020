@@ -1,12 +1,10 @@
 <template>
-    <div>
-        首页
-    </div>
+    <div>头部组件</div>
 </template>
 
 <script>
-export default {
-
+export default{
+    
 }
 </script>
 
