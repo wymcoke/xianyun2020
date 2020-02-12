@@ -86,16 +86,29 @@ export default {
     // value是输入框的值
     // cb可以接收数组，把数组列表展示出来
     queryDepartSearch(value, cb) {
-      console.log(value);
+      // 如果输入框没有值就直接返回
+      if (!value) {
+        return;
+      }
       // 根据value请求城市列表
-      // 假设接口返回了
-      const arr = [
-        { value: "广州", sort: "CAN" },
-        { value: "广元", sort: "yuan" },
-        { value: "广安", sort: "guangan" }
-      ];
-      // cb把数组展示到列表中, 数组中每一项必须是对象，对象中必须有value属性
-      cb(arr);
+      this.$axios({
+        url: "/airs/city",
+        // axios的get请求的参数使用params, 如果是post请求使用data
+        params: {
+          name: value
+        }
+      }).then(res => {
+        // data是数组，但是数组中的对象没有value值
+        const { data } = res.data;
+        // 给data中没一项都添加一个value属性 (forEach,map)
+        const newData = data.map(v => {
+          v.value = v.name.replace("市", "");
+          // map返回的数组由return组成的
+          return v;
+        });
+        // cb把数组展示到列表中, 数组中每一项必须是对象，对象中必须有value属性
+        cb(newData);
+      });
     },
 
     queryDestSearch(value, cb) {},
@@ -112,7 +125,9 @@ export default {
     // 触发和目标城市切换时触发
     handleReverse() {},
     // 提交表单是触发
-    handleSubmit() {}
+    handleSubmit() {
+      console.log(this.form);
+    }
   },
   mounted() {}
 };
