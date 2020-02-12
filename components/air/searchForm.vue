@@ -42,6 +42,7 @@
       <el-form-item label="出发时间">
         <!-- change 用户确认选择日期时触发 -->
         <el-date-picker
+          v-model="form.departDate"
           type="date"
           placeholder="请选择日期"
           style="width: 100%;"
@@ -67,6 +68,8 @@
 </template>
 
 <script>
+// 时间转换的工具
+import moment from "moment";
 export default {
   data() {
     return {
@@ -171,12 +174,34 @@ export default {
     // 目标城市下拉选择时触发
     handleDestSelect(item) {},
     // 确认选择日期时触发
-    handleDate(value) {},
+    // value是一个时间对象
+    handleDate(value) {
+      // 修改日期的格式
+      // console.log("测试打印日期：", value)
+      this.form.departDate = moment(value).format("YYYY-MM-DD");
+    },
     // 触发和目标城市切换时触发
     handleReverse() {},
     // 提交表单是触发
     handleSubmit() {
-      console.log(this.form);
+      if (!this.form.departCity) {
+        this.$message.error("请输入出发城市");
+        return;
+      }
+      if (!this.form.destCity) {
+        this.$message.error("请输入到达城市");
+        return;
+      }
+      if (!this.form.departDate) {
+        this.$message.error("请选择时间");
+        return;
+      }
+      // 跳转到 /air/flights，保证该页面url的参数有5个参数
+      this.$router.push({
+        path: "/air/flights",
+        // query是url的参数
+        query: this.form
+      });
     }
   },
   mounted() {}
