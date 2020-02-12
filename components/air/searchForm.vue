@@ -16,11 +16,13 @@
       <el-form-item label="出发城市">
         <!-- fetch-suggestions : 监听输入框的输入，可以在这个事件中请求API数据,类似input事件 -->
         <!-- select : 点击展开列表选项时候触发 -->
+        <!-- @blur：失去焦点时候触发，默认选中第一个 -->
         <el-autocomplete
           v-model="form.departCity"
           :fetch-suggestions="queryDepartSearch"
           placeholder="请搜索出发城市"
           @select="handleDepartSelect"
+          @blur="handleDepartBlur"
           class="el-autocomplete"
         ></el-autocomplete>
       </el-form-item>
@@ -76,7 +78,9 @@ export default {
         destCity: "",
         destCode: "",
         departDate: ""
-      }
+      },
+      // 出发城市列表
+      departData: []
     };
   },
   methods: {
@@ -106,11 +110,21 @@ export default {
           // map返回的数组由return组成的
           return v;
         });
+        // 把newData保存到data中
+        this.departData = newData;
         // cb把数组展示到列表中, 数组中每一项必须是对象，对象中必须有value属性
         cb(newData);
       });
     },
-
+    // 出发城市输入框失去焦点时候触发
+    handleDepartBlur() {
+      if (this.departData.length === 0) {
+        return;
+      }
+      // 默认获取数组中第一个城市
+      this.form.departCity = this.departData[0].value;
+      this.form.departCode = this.departData[0].sort;
+    },
     queryDestSearch(value, cb) {},
 
     // 出发城市下拉选择时触发
