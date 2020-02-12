@@ -24,37 +24,44 @@
 
 <script>
 export default {
-    data(){
-        return {
-            // 表单数据
-            form: {
-                username: "",
-                password: ""
-            },
-            // 表单规则
-            rules: {
-                username: [
-                    // required表示必填，message错误的提示信息. trigger输入框失去焦点时候触发验证
-                    { required: true, message: '请输入用户名', trigger: 'blur' }
-                ],
-                password: [
-                    { required: true, message: '请输入密码', trigger: 'blur' }
-                ],
-            },
+  data() {
+    return {
+      // 表单数据
+      form: {
+        username: "",
+        password: ""
+      },
+      // 表单规则
+      rules: {
+        username: [
+          // required表示必填，message错误的提示信息. trigger输入框失去焦点时候触发验证
+          { required: true, message: "请输入用户名", trigger: "blur" }
+        ],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
+      }
+    };
+  },
+  methods: {
+    // 提交登录
+    handleLoginSubmit() {
+      // el-form都有一个validate的方法用于验证的
+      this.$refs.form.validate(vaild => {
+        // 验证通过
+        if (vaild) {
+          // 提交到登录接口
+          console.log(this.form);
+          this.$axios({
+            url: "/accounts/login",
+            method: "POST",
+            data: this.form
+          }).then(res => {
+            console.log(res);
+          });
         }
-    },
-    methods: {
-        // 提交登录
-        handleLoginSubmit(){
-            // el-form都有一个validate的方法用于验证的
-            this.$refs.form.validate(vaild => {
-                // 验证通过
-                if(vaild){
-                    // 提交到登录接口
-           console.log(this.form)
-        }
+      });
     }
-}
+  }
+};
 </script>
 
 <style scoped lang="less">
