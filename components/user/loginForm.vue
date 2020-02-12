@@ -49,17 +49,21 @@ export default {
         // 验证通过
         if (vaild) {
           // 提交到登录接口
-          console.log(this.form);
-          this.$axios({
-            url: "/accounts/login",
-            method: "POST",
-            data: this.form
-          }).then(res => {
-            const { data } = res;
-            // 把数据存储到store中
-            // this.$store.state.user.userInfo = data; // 错误的写法
-            // 通过commit调用mutations中的方法
-            this.$store.commit("user/setUserInfo", data);
+          // this.$axios({
+          //   url: "/accounts/login",
+          //   method: "POST",
+          //   data: this.form
+          // }).then(res => {
+          //   const { data } = res;
+          // 把数据存储到store中
+          // this.$store.state.user.userInfo = data; // 错误的写法
+          // 通过commit调用mutations中的方法
+          //   this.$store.commit("user/setUserInfo", data);
+          // });
+          this.$store.dispatch("user/login", this.form).then(() => {
+            this.$message.success("登录成功!");
+            // 跳转到首页
+            this.$router.push("/");
           });
         }
       });
