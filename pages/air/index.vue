@@ -48,8 +48,22 @@
 <script>
 import SearchForm from "@/components/air/searchForm";
 export default {
+  data() {
+    return {
+      sales: []
+    };
+  },
   components: {
     SearchForm
+  },
+  mounted() {
+    // 请求推荐机票列表
+    this.$axios({
+      url: "/airs/sale"
+    }).then(res => {
+      const { data } = res.data;
+      this.sales = data;
+    });
   }
 };
 </script>
