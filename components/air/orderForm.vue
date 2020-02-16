@@ -86,6 +86,7 @@
         >
       </div>
     </div>
+    <span>{{ allPrice }}</span>
   </div>
 </template>
 
@@ -112,6 +113,32 @@ export default {
       // 当前机票的详细信息
       infoData: {}
     };
+  },
+  computed: {
+    // 总价格，展示在侧边栏组件
+    allPrice() {
+      // 先判断infoData是否有数据
+      if (!this.infoData.seat_infos) {
+        return;
+      }
+      let price = 0;
+      // 单价
+      price += this.infoData.seat_infos.org_settle_price;
+      // 基建燃油费
+      price += this.infoData.airport_tax_audlet;
+      // 保险
+      this.infoData.insurances.forEach(v => {
+        // 如果选中的id数组包含了当前的保险id，需要加上保险的价格
+        if (this.form.insurances.indexOf(v.id) > -1) {
+          price += v.price;
+        }
+      });
+      // 人数的数量
+      price *= this.form.users.length;
+      // 把总价保存到store
+      this.$store.commit("air/setAllPrice", price);
+      return "";
+    }
   },
   mounted() {
     // 请求机票详细信息（保险还有右侧栏需要的数据）
